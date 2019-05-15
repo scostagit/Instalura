@@ -8,20 +8,26 @@ import * as serviceWorker from './serviceWorker';
 import "./css/reset.css";
 import "./css/timeline.css";
 import "./css/login.css";
+import { matchPattern} from "react-router/lib/PatternUtils";
 
 //ReactDOM.render(<App />, document.getElementById('root'));
 
-function verificaAutenticacao(next,replace){
-    if(localStorage.getItem("auth-token")===null){
-        replace('/?msg=você precisa estar logado para acessar o endereço');
+function verificaAutenticacao(nextState,replace) {
+    const resultado = matchPattern('/timeline(/:login)',nextState.location.pathname);
+    const enderecoPrivadoTimeline = resultado.paramValues[0] === undefined;
+  
+    if(enderecoPrivadoTimeline && localStorage.getItem('auth-token') === null){
+      replace('/?msg=você precisa estar logado para acessar o endereço');
     }
-}
+  }
+  
 
 ReactDOM.render(
 (
     <Router history={browserHistory}>
         <Route path="/" component={Login}/>
-        <Route path="/timeline" component={App} onEnter={verificaAutenticacao} />
+        {/* A parte opcional é o /:login. Com a mesma rota acessaremos o componente. */}        
+        <Route path="/timeline(/:login)" component={App} onEnter={verificaAutenticacao}/>      
         <Route path="/logout" component={Logout} />
     </Router>
 ),
