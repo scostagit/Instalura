@@ -1,6 +1,11 @@
 import React, {Component} from "react";
+import { browserHistory} from "react-router"
 
 export default class Header extends Component{
+
+    logout(){      
+        browserHistory.push("/logout");
+    }
     
     render(){
         return (
@@ -21,7 +26,16 @@ export default class Header extends Component{
                         <a href="#">
                         ♡                        
                         </a>
-                    </li>
+                    </li>                  
+                    </ul>
+                </nav>
+                <nav>
+                    <ul className="header-nav">
+                    <li className="header-nav-item" onClick={this.logout}>
+                        <a href="#">
+                        ➜                        
+                        </a>
+                    </li>                  
                     </ul>
                 </nav>
             </header>  

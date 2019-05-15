@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-// import { copyFile } from "fs";
 
 class FotoAtualizacoes extends Component{
     render(){
@@ -22,7 +21,7 @@ class FotoInfo extends Component{
             <div className="foto-info-likes">
              {
                this.props.foto.likers.map(liker=>{
-                 return  <a href="#">{liker.login},</a>
+                 return  <a href="#" key={liker.login}>{liker.login},</a>
                })
              }            
                 <span> curtiram</span>
@@ -38,7 +37,7 @@ class FotoInfo extends Component{
               {
                   this.props.foto.comentarios.map(comenatario=>{
                     return(
-                      <li className="comentario">
+                      <li key={comenatario.id} className="comentario">
                         <a className="foto-info-autor">{comenatario.login} </a>
                         {comenatario.texto}
                       </li>
