@@ -10,8 +10,6 @@ import "./css/timeline.css";
 import "./css/login.css";
 import { matchPattern} from "react-router/lib/PatternUtils";
 
-//ReactDOM.render(<App />, document.getElementById('root'));
-
 function verificaAutenticacao(nextState,replace) {
     const resultado = matchPattern('/timeline(/:login)',nextState.location.pathname);
     const enderecoPrivadoTimeline = resultado.paramValues[0] === undefined;
