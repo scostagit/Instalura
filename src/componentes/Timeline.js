@@ -52,6 +52,47 @@ export default class Timeline extends Component{
         }
     }
 
+    comenta(fotoId, textoComentario){
+
+        const requestInfo = {
+            method:'POST',
+            body: JSON.stringify({texto:textoComentario}),
+            headers: new Headers({
+              'Content-type':'application/json'
+            })
+          };
+          
+          fetch(`https://instalura-api.herokuapp.com/api/fotos/${fotoId}/comment?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`, requestInfo)
+            .then(response=>{        
+                if(response.ok){
+                  return response.json();
+                }else{
+                  throw new Error("Não foi possivel efetar o comentario!");
+                }           
+            })
+            .then(novoComentario=>{
+                Pubsub.publish("autaliza-novo-comentatio", {fotoId, novoComentario});            
+            })
+            .catch(error=>{
+              console.log(error);
+            });
+    }
+
+    like(fotoId){
+        fetch(`https://instalura-api.herokuapp.com/api/fotos/${fotoId}/like?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`,{method:"POST"})
+        .then(response=>{
+          if(response.ok){
+            return response.json();
+          }else{
+            throw new Error("nao foi possivel realizar o like")
+          }
+        })
+        .then(liker=> {  
+             Pubsub.publish("atualiza-like", {fotoId, liker});
+        })
+        .catch(error=> console.log(error));
+    }
+
     render(){
         return (
             <div className="fotos container">
@@ -59,7 +100,9 @@ export default class Timeline extends Component{
                     transitionName="timeline"
                     transitionEnterTimeout={500}
                     transitionLeaveTimeout={300}>                        
-                    { this.state.fotos.map(foto=> <FotoItem key={foto.id} foto={foto}/>) } 
+                    { 
+                        this.state.fotos.map(foto=> <FotoItem key={foto.id} foto={foto} onLikeClick={this.like} onComentaSubmit={this.comenta}/>)
+                    } 
                 </ReactCSSTransitionGroup>               
             </div>       
         );

@@ -9,58 +9,24 @@ class FotoAtualizacoes extends Component{
     this.state = {likeada: props.foto.likeada};
   }
 
-  like(event){
-      event.preventDefault();
-
-       fetch(`https://instalura-api.herokuapp.com/api/fotos/${this.props.foto.id}/like?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`,{method:"POST"})
-       .then(response=>{
-         if(response.ok){
-           return response.json();
-         }else{
-           throw new Error("nao foi possivel realizar o like")
-         }
-       })
-       .then(liker=> {           
-            this.setState({likeada : !this.state.likeada});           
-            Pubsub.publish("atualiza-like", {fotoId:this.props.foto.id, liker});
-       })
-       .catch(error=> console.log(error));
+    onLikeClick(event){   
+       event.preventDefault();
+       this.setState({likeada : !this.state.likeada});
+       this.props.onLikeClick(this.props.foto.id);     
     }
   
-    comenta(event){
+    onComentaSubmit(event){   
       event.preventDefault();
       var texto = this.comentario.value;
       this.comentario.value = "";
-
-      const requestInfo = {
-        method:'POST',
-        body: JSON.stringify({texto}),
-        headers: new Headers({
-          'Content-type':'application/json'
-        })
-      };
-      
-      fetch(`https://instalura-api.herokuapp.com/api/fotos/${this.props.foto.id}/comment?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`, requestInfo)
-        .then(response=>{        
-            if(response.ok){
-              return response.json();
-            }else{
-              throw new Error("Não foi possivel efetar o comentario!");
-            }           
-        })
-        .then(novoComentario=>{
-            Pubsub.publish("autaliza-novo-comentatio", {fotoId: this.props.foto.id, novoComentario});            
-        })
-        .catch(error=>{
-          console.log(error);
-        });
+      this.props.onComentaSubmit(this.props.foto.id, texto);
     }
 
     render(){
         return (
             <section className="fotoAtualizacoes">             
-              <a onClick={this.like.bind(this)} className={this.state.likeada ? "fotoAtualizacoes-like-ativo" : "fotoAtualizacoes-like"}>Likar</a>
-              <form className="fotoAtualizacoes-form" onSubmit={this.comenta.bind(this)}>
+              <a onClick={this.onLikeClick.bind(this)} className={this.state.likeada ? "fotoAtualizacoes-like-ativo" : "fotoAtualizacoes-like"}>Likar</a>
+              <form className="fotoAtualizacoes-form" onSubmit={this.onComentaSubmit.bind(this)}>
                 <input type="text" placeholder="Adicione um comentário..." className="fotoAtualizacoes-form-campo" ref={input=> this.comentario = input}/>
                 <input type="submit" value="Comentar!" className="fotoAtualizacoes-form-submit"/>
               </form>
@@ -162,7 +128,7 @@ export default class FotoItem extends Component{
                 <FotoHeader foto={this.props.foto}/>
                 <img alt="foto" className="foto-src" src={this.props.foto.urlFoto}/>
                 <FotoInfo foto={this.props.foto}/>
-                <FotoAtualizacoes foto={this.props.foto}/>
+                <FotoAtualizacoes {...this.props}/>
           </div>   
         );
     }
