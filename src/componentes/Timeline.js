@@ -16,6 +16,32 @@ export default class Timeline extends Component{
         Pubsub.subscribe("autalizar-pesquisa", (topic, fotosPesquisa)=>{
            this.setState({fotos:fotosPesquisa});
         });
+
+        Pubsub.subscribe("atualiza-like", (topico, infoLiker)=>{   
+            
+            const fotoAchada = this.state.fotos.find(foto=> foto.id === infoLiker.fotoId);
+            //change the status of likeada propeerty
+            fotoAchada.likeada  = !fotoAchada.likeada;
+            
+            const possivelLinker = fotoAchada.likers.find(liker=> liker.login=== infoLiker.liker.login);
+            
+            if(possivelLinker === undefined){           
+                fotoAchada.likers.push(infoLiker.liker);
+                
+            }else{
+                const novoLikers =  fotoAchada.likers.filter(liker=> liker.login!== infoLiker.liker.login);
+                fotoAchada.likers = novoLikers;
+            }  
+
+            this.setState({fotos:this.state.fotos});
+        });
+      
+      
+        Pubsub.subscribe("autaliza-novo-comentatio", (topico, infoComentario)=>{    
+            const fotoAchada = this.state.fotos.find(foto=> foto.id === infoComentario.fotoId); 
+            fotoAchada.comentarios.push(infoComentario.novoComentario);  
+            this.setState({fotos:this.state.fotos});            
+        });
     }
 
     carregaFotos(){      

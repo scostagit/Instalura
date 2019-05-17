@@ -1,0 +1,29 @@
+ - presentational components
+
+Nós fizemos uma divisão: a maior parte das lógicas ficou na Timeline, 
+e os elementos relacionados com as imagens ficou no Foto. Esse componente 
+que contem apenas coisas do React - focado em visualização - recebe o nome de presentational components. 
+
+São componentes cujo foco é a apresentação. Observe também que removemos o estado do componentes, 
+fazendo uso apenas dos argumentos que foram passados - uma ótima prática.
+
+- Functinal Component
+
+Nós poderíamos transformar a classe simplesmente em uma função que recebe como argumento o props,
+no React, isto recebe o nome de Functinal Component. Trata-se de um componente sem estado (stateless).
+Podemos ter um componente apenas interno. Por exemplo, na classe FotoAtualizacoes, optamos por manter 
+o estado do comentario, uma ação interna.
+
+
+- Container Component
+A Timeline trabalhará um pouco com a visualização, que apesar de ter o render(), não é o protagonista.
+ Este caso é o que chamamos de Container Component, um componente que irá conter outros componentes, 
+ tem lógicas, repassando-as para os demais componentes.
+
+Fizemos uma refatoração grande, tendo um avance em relação à primeira parte do curso, em que não nos
+ aprofundamos na Presentational e Container Component. Nesta parte, avançamos muito mais.
+
+Faça os exercícios da aula, em que apresentamos muita coisa, para depois continuarmos com a terceira 
+parte do curso de React.
+
+
