@@ -14,7 +14,7 @@ export default class Header extends Component{
         fetch(`https://instalura-api.herokuapp.com/api/public/fotos/${this.loginPesquisado.value}`)
             .then(response=> response.json())
             .then(fotos=> {               
-                Pubsub.publish("autalizar-pesquisa", fotos);
+                Pubsub.publish("timeline", fotos);
             });
     }
     
