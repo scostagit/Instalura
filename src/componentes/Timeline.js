@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import FotoItem from "./FotoItem";
 import  ReactCSSTransitionGroup  from "react/lib/ReactCSSTransitionGroup";
+import TimeLineApi from "../services/TimeLineApi";
 
 export default class Timeline extends Component{
 
@@ -11,8 +12,8 @@ export default class Timeline extends Component{
     }
 
     componentWillMount(){
-        this.props.store.subscribe(fotos=>{
-            this.setState({fotos:fotos});
+        this.props.store.subscribe(()=>{          
+            this.setState({fotos:this.props.store.getState()});
         });               
     }
 
@@ -22,9 +23,9 @@ export default class Timeline extends Component{
             urlPerfil = `https://instalura-api.herokuapp.com/api/fotos?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`;
         } else {
             urlPerfil = `https://instalura-api.herokuapp.com/api/public/fotos/${this.login}`;
-        }
+        }  
 
-        this.props.store.lista(urlPerfil);
+        this.props.store.dispatch(TimeLineApi.lista(urlPerfil));
     }
 
     componentDidMount(){       
@@ -47,11 +48,11 @@ export default class Timeline extends Component{
     }
 
     comenta(fotoId, textoComentario){
-        this.props.store.comenta(fotoId, textoComentario);
+        this.props.store.dispatch(TimeLineApi.comenta(fotoId, textoComentario));        
     }
 
     like(fotoId){
-        this.props.store.like(fotoId);
+        this.props.store.dispatch(TimeLineApi.like(fotoId));
     }
 
     render(){
