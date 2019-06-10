@@ -1,8 +1,19 @@
 import React, {Component} from "react";
 import { browserHistory} from "react-router";
-import Pubsub from "pubsub-js";
+import TimeLineApi from "../services/TimeLineApi";
 
 export default class Header extends Component{
+
+    constructor(){
+        super();
+        this.state = {msg:''};
+    }
+
+    componentDidMount(){
+        this.props.store.subscribe(()=>{
+            this.setState({msg:this.props.store.getState().notificacao});
+        });
+    }
 
     logout(){      
         browserHistory.push("/logout");
@@ -10,12 +21,7 @@ export default class Header extends Component{
 
     pesquisa(event){
         event.preventDefault();
-
-        fetch(`https://instalura-api.herokuapp.com/api/public/fotos/${this.loginPesquisado.value}`)
-            .then(response=> response.json())
-            .then(fotos=> {               
-                Pubsub.publish("timeline", fotos);
-            });
+        this.props.store.dispatch(TimeLineApi.pesquisa(this.loginPesquisado.value));        
     }
     
     render(){
@@ -34,6 +40,7 @@ export default class Header extends Component{
                 <nav>
                     <ul className="header-nav">
                     <li className="header-nav-item">
+                        <span>{this.state.msg}</span>
                         <a href="#">
                         ♡                        
                         </a>

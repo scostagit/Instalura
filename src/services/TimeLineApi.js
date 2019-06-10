@@ -1,3 +1,5 @@
+import {listagem , comentario, like, notifica} from "../actions/actionCreator";
+
 export default class TimeLineApi{ 
 
    /*
@@ -13,7 +15,7 @@ export default class TimeLineApi{
             fetch(urlPerfil)        
                 .then(resp=> resp.json())
                 .then(fotos=> {                   
-                    dispatch({type:"LISTAGEM", fotos});
+                    dispatch(listagem(fotos));
                     return fotos;
                 });
         }       
@@ -25,7 +27,7 @@ export default class TimeLineApi{
                 method:'POST',
                 body: JSON.stringify({texto:textoComentario}),
                 headers: new Headers({
-                'Content-type':'application/json'
+                    'Content-type':'application/json'
                 })
             };
             
@@ -38,7 +40,7 @@ export default class TimeLineApi{
                     }           
                 })
                 .then(novoComentario=>{                
-                   dispatch({type:"COMENTARIO", fotoId, novoComentario });   
+                   dispatch(comentario(fotoId, novoComentario));   
                 })
                 .catch(error=>{
                     console.log(error);
@@ -58,9 +60,26 @@ export default class TimeLineApi{
                 }
             })
             .then(liker=> {                 
-                dispatch({type:"LIKE", fotoId, liker});
+                dispatch(like(fotoId, liker));
             })
             .catch(error=> console.log(error));
         }   
     }  
+
+    static pesquisa(login){    
+        return dispatch =>{
+            fetch(`https://instalura-api.herokuapp.com/api/public/fotos/${login}`)
+            .then(response=> response.json())
+            .then(fotos=> { 
+                if(fotos.length === 0){
+                    dispatch(notifica('usuario não encontrado!'));
+                }else{
+                    dispatch(notifica(''));
+                }
+
+                dispatch(listagem(fotos));          
+                return fotos;
+            });
+        }       
+    }
 }

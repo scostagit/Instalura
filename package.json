@@ -5,7 +5,8 @@
   "devDependencies": {
     "react-scripts": "0.8.5"
   },
-  "dependencies": {   
+  "dependencies": {
+    "immutable": "^4.0.0-rc.12",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-router": "^3.0.0",
